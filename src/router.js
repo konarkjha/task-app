@@ -11,6 +11,7 @@ import {
 import {
   signup,
   login,
+  verifyUser,
   getAllUsers,
   get as getUserRoute,
   update as updateUserRoute,
@@ -56,6 +57,7 @@ export default function createRouter() {
   // authenticate. Returns a json web token to use with requests.
   router.post("/signup", signup);
   router.post("/login", login);
+  router.post("/verify", verifyUser);
   router.get(
     "/user/:userId",
     verifySessionMiddleware,

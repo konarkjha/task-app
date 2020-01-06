@@ -11,6 +11,7 @@ export const ERROR_CODES = {
   CONFLICT: 409
 };
 export const ERROR_TEXTS = {
+  SIGNUP_SUCCESS: "Signup successful.",
   USER_ALREADY_EXIST: "Phone number and Email Id should be unique.",
   MISSING_LOGIN_CREDENTIALS: "Please provide valid credintials.",
   INVALID_CREDENTIALS: "Invalid credentials",
@@ -27,12 +28,15 @@ export const ERROR_TEXTS = {
   MISSING_AUTH_TOKEN: "Missing Authorization header with Bearer token",
   ROLE_ALREADY_EXIST: ", already exists.",
   ROLE_NOT_FOUND: "Incorrect role id.",
-  PASSWORD_FIELD_MISSING: "Please provide valid password"
+  PASSWORD_FIELD_MISSING: "Please provide valid password",
+  RECORD_NOT_FOUND: "No record found.",
+  PROVIDE_VALID_CREDENTIALS: "Please provide either emailId or contact number."
 };
 
 export const SUCCESS_TEXT = {
   USER_REMOVED: "User details has been removed.",
-  ROLE_REMOVED: "Role removed successfully."
+  ROLE_REMOVED: "Role removed successfully.",
+  OTP_SENT: "OTP sent successfully"
 };
 
 export const STATUS = {
@@ -65,4 +69,13 @@ export const ACCESS_ROLES = {
 export const PAGINATION_LIMITS = {
   DEFAULT: 10,
   PAGE: 1
+};
+export const EMAIL_SUBJECTS = {
+  VERIFY_EMAIL: "Verification email",
+  RESET_PASSWORD_EMAIL: "Getbaqla: Reset password",
+  USER_CREATED: "Welcome To Getbaqala"
+};
+export const USER_STATUS = {
+  VERIFIED: "VERIFIED",
+  PENDING_VERIFICATION: "PENDING_VERIFICATION"
 };

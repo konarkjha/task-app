@@ -19,12 +19,30 @@ export const signup = route(
   }
 );
 
+export const verifyUser = route(
+  async (req, res) => {
+    try {
+      const { userId, otp, firstTimeLogin } = req.body;
+      const userDetails = await userModel.verify(userId, otp, firstTimeLogin);
+      res.send(successRoute(userDetails));
+    } catch (error) {
+      throw error;
+    }
+  },
+  {
+    requiredFields: ["userId", "otp"]
+  }
+);
+
 export const login = route(async (req, res) => {
   try {
-    const { email, contactNumber, password } = req.body;
-    if ((!contactNumber && !password) || (!email && !password)) {
+    const { loginWithOtp, email, contactNumber, password } = req.body;
+    if (
+      (loginWithOtp && !email && !contactNumber) ||
+      (!loginWithOtp && !email && !password)
+    ) {
       throw new ApplicationError(
-        MISSING_LOGIN_CREDENTIALS,
+        "Please provide all the details for login.",
         ERROR_CODES.BAD_REQUEST
       );
     }

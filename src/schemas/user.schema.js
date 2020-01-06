@@ -9,7 +9,7 @@ export class UserSchema extends BaseModel {
       "users",
       {
         id: {
-          type: Sequelize.STRING,
+          type: Sequelize.INTEGER,
           primaryKey: true
         },
         name: { type: Sequelize.STRING, allowNull: false },
@@ -21,10 +21,11 @@ export class UserSchema extends BaseModel {
           defaultValue: "CUSTOMER",
           allowNull: false
         },
-        photoUrl: {
-          type: Sequelize.STRING,
-          defaultValue: null
+        status: {
+          type: Sequelize.ENUM("VERIFIED", "PENDING_VERIFICATION"),
+          defaultValue: "PENDING_VERIFICATION"
         },
+        verificationCode: { type: Sequelize.INTEGER },
         lastLogin: {
           type: "TIMESTAMP",
           defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

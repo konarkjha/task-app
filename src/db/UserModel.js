@@ -6,7 +6,9 @@ import {
   ERROR_CODES,
   ERROR_TEXTS,
   SUCCESS_TEXT,
-  ENVIRONMENT
+  ENVIRONMENT,
+  EMAIL_SUBJECTS,
+  USER_STATUS
 } from "../lib/constants";
 import { generateToken } from "../lib/token";
 import { hashPassword, comparePassword } from "../lib/crypto";
@@ -14,6 +16,7 @@ import uuid from "uuid";
 import Sequelize from "sequelize";
 import { config } from "../lib/config";
 import { sendSms, sendMail } from "../lib/utils";
+import ejs from "ejs";
 const Op = Sequelize.Op;
 
 export default class UserModel extends BaseModel {
@@ -41,15 +44,74 @@ export default class UserModel extends BaseModel {
           ERROR_CODES.CONFLICT
         );
       }
-      signupDetails.password = await hashPassword(signupDetails.password);
+      const verificationCode = Math.floor(Math.random() * 8999 + 1000);
+      signupDetails.verificationCode = verificationCode;
       const userId = uuid();
       signupDetails.id = userId;
+      signupDetails.password = await hashPassword(signupDetails.password);
       await this.model.create(signupDetails);
-      return { userId };
+      const emailBody = await ejs.renderFile(
+        "templates/email/signupOtpVerification.ejs",
+        {
+          name: signupDetails.name,
+          verificationCode: verificationCode
+          // RentickleLogo: "path"
+        }
+      );
+      sendMail(signupDetails.email, EMAIL_SUBJECTS.VERIFY_EMAIL, emailBody);
+      const message = `Hi ${signupDetails.name},%0AWelcome to Getbaqala. Your OTP is ${verificationCode}. Enter this in the app to verify your account.`;
+      sendSms(signupDetails.contactNumber, message);
+      return {
+        userId: userId,
+        otp: verificationCode
+      };
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }
+
+  verify = async (userId, verificationCode, firstTimeLogin = null) => {
+    try {
+      let whereCondition = {
+        id: userId,
+        verificationCode
+      };
+      if (!firstTimeLogin) {
+        whereCondition.status = USER_STATUS.VERIFIED;
+      } else {
+        whereCondition.status = USER_STATUS.PENDING_VERIFICATION;
+      }
+      const userDetails = await this.model.findOne({
+        attributes: ["id", "name", "email", "contactNumber", "userType"],
+        where: whereCondition,
+        raw: true
+      });
+      if (!userDetails) {
+        throw new ApplicationError(
+          ERROR_TEXTS.RECORD_NOT_FOUND,
+          ERROR_CODES.FORBIDDEN
+        );
+      }
+      await this.model.update(
+        {
+          verificationCode: null,
+          lastLogin: new Date(),
+          status: USER_STATUS.VERIFIED
+        },
+        { where: { id: userId } }
+      );
+      const token = await generateToken(userId);
+      userDetails.token = token;
+      return userDetails;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
+  };
+
   async loginWithOtp(passedUserInformation, forgetPassword = false) {
     try {
       const verificationCode = Math.floor(Math.random() * 8999 + 1000);
@@ -90,7 +152,7 @@ export default class UserModel extends BaseModel {
       let emailSubject = EMAIL_SUBJECTS.VERIFY_EMAIL;
       let message = `Hi ${userDetails.name},%0AWelcome to Getbaqala_Task. Your OTP is ${verificationCode}. Enter this in the app to verify your account.`;
       let emailBody = await ejs.renderFile(
-        "templates/emails/signupOtpVerification.ejs",
+        "templates/email/signupOtpVerification.ejs",
         {
           name: userDetails.name,
           verificationCode
@@ -100,14 +162,11 @@ export default class UserModel extends BaseModel {
       if (forgetPassword) {
         emailSubject = EMAIL_SUBJECTS.RESET_PASSWORD_EMAIL;
         message = `Hi ${userDetails.name},%0AWelcome to Getbaqala_Task. Your OTP for reset password is ${verificationCode}. Enter this to verify your authenticity.`;
-        emailBody = await ejs.renderFile(
-          "templates/emails/forgotPassword.ejs",
-          {
-            name: userDetails.name,
-            verificationCode
-            // BaqalaLogo: "path"
-          }
-        );
+        emailBody = await ejs.renderFile("templates/email/forgotPassword.ejs", {
+          name: userDetails.name,
+          verificationCode
+          // BaqalaLogo: "path"
+        });
       }
       if (passedUserInformation.contactNumber) {
         sendSms(passedUserInformation.contactNumber, message);
@@ -125,7 +184,7 @@ export default class UserModel extends BaseModel {
     try {
       if (!loginDetails.contactNumber && !loginDetails.email) {
         throw new ApplicationError(
-          "Please provide either emailId or contact number.",
+          ERROR_TEXTS.PROVIDE_VALID_CREDENTIALS,
           ERROR_CODES.BAD_REQUEST
         );
       }
@@ -137,7 +196,7 @@ export default class UserModel extends BaseModel {
         const userDetails = await this.loginWithOtp(passedUserInformation);
         return {
           userId: userDetails.userId,
-          successMessage: SIGNUP_STATUS.OTP_SENT
+          successMessage: SUCCESS_TEXT.OTP_SENT
         };
       } else {
         const userInfo = await this.loginWithUserName(loginDetails);
@@ -145,13 +204,17 @@ export default class UserModel extends BaseModel {
         return userInfo;
       }
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }
 
   async loginWithUserName(loginDetails) {
     try {
-      const whereCondition = {};
+      const whereCondition = {
+        status: USER_STATUS.VERIFIED
+      };
       if (loginDetails.email) {
         whereCondition.email = loginDetails.email;
       } else {
