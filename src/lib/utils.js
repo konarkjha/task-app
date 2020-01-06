@@ -60,13 +60,6 @@ export async function sendMail(
         pass: process.env.EMAIL_PASSWORD
       }
     });
-    console.log(
-      process.env.EMAIL,
-      "process.env.EMAIL",
-      process.env.EMAIL_PASSWORD,
-      "process.env.EMAIL_PASSWORD"
-    );
-
     const mailOptions = {
       from: `${nameToSend || "Getbaqala"} <${process.env.DEV_EMAIL}>`,
       to: email,
@@ -74,8 +67,6 @@ export async function sendMail(
       html: message,
       bcc: bccEmail || ""
     };
-    console.log("mailOptions", mailOptions);
-
     if (Object.keys(attachments).length) {
       mailOptions.attachments = [attachments];
     }
