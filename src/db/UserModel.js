@@ -66,8 +66,6 @@ export default class UserModel extends BaseModel {
         otp: verificationCode
       };
     } catch (error) {
-      console.log(error);
-
       throw error;
     }
   }
@@ -106,8 +104,6 @@ export default class UserModel extends BaseModel {
       userDetails.token = token;
       return userDetails;
     } catch (error) {
-      console.log(error);
-
       throw error;
     }
   };
@@ -204,8 +200,6 @@ export default class UserModel extends BaseModel {
         return userInfo;
       }
     } catch (error) {
-      console.log(error);
-
       throw error;
     }
   }
