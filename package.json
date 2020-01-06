@@ -1,0 +1,74 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "task api's",
+  "main": "index.js",
+  "scripts": {
+    "dev-server": "nodemon --exec \"  NODE_ENV=development babel-node src\"",
+    "build": "babel -d ./build src",
+    "start-master": "yarn run build && pm2 startOrRestart ecosystem.config.js --env master",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "lint": "eslint 'src/**/*.js'",
+    "precommit": "lint-staged",
+    "fix-lint": "prettier --write './src/**/*.js' && npm run-script lint"
+  },
+  "pre-commit": {
+    "run": "precommit"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konarkjha/task-api.git"
+  },
+  "homepage": "https://github.com/konarkjha/task-api#readme",
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "approot": "^0.2.1",
+    "async": "^3.1.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "bwip-js": "^1.7.3",
+    "cors": "^2.8.4",
+    "debug": "^3.1.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.1",
+    "express-fileupload": "^0.4.0",
+    "express-force-ssl": "^0.3.2",
+    "express-request-language": "^1.1.12",
+    "jsonwebtoken": "^8.5.1",
+    "lint-staged": "^9.2.1",
+    "lodash": "^4.17.4",
+    "mysql": "^2.17.1",
+    "mysql2": "^2.0.0",
+    "node-openssl-cert": "0.0.103",
+    "nodemailer": "^4.4.1",
+    "requestify": "^0.2.5",
+    "sequelize": "^5.13.1",
+    "uuid": "^3.3.3",
+    "win-node-env": "^0.4.0"
+  },
+  "devDependencies": {
+    "api-document": "^1.0.4",
+    "babel-eslint": "^8.0.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "eslint": "^4.8.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "nodemon": "^1.12.1",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.7.3"
+  },
+  "author": "konark jha",
+  "license": "ISC"
+}
