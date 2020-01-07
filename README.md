@@ -1,11 +1,17 @@
 # task-app
 Steps to run task-app :
 git clone  https://github.com/konarkjha/task-app.git
+
 cd task-api
+
 install nodejs Refer: https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/
+
 install yarn Refer: https://linuxize.com/post/how-to-install-yarn-on-ubuntu-18-04/
+
 after installing yarn use:  yarn install
+
 then once installed  if Os is windows use: " npm i windows-env "
+
 then: yarn dev-server  for both window and ubuntu.
 
 1. Api to Register User
@@ -20,6 +26,7 @@ curl --location --request POST 'http://localhost:3000/signup' \
 }'
 
 2. Api to Verify user with Otp (EMAIL)
+
 curl --location --request POST 'http://localhost:3000/verify' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -38,6 +45,7 @@ curl --location --request POST 'http://localhost:3000/login' \
 }'
 
 4. Api to login user with user email and password will work only after user verified
+
 curl --location --request POST 'http://localhost:3000/login' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -46,9 +54,12 @@ curl --location --request POST 'http://localhost:3000/login' \
     "loginWithOtp": 0
 }'
 5. Api to get user details
+
 curl --location --request GET 'localhost:3000/user/dbd8db0e-e111-4cb9-ba3b-098f417e07b0' \
 --header 'Authorization: Bearer dbd8db0e-e111-4cb9-ba3b-098f417e07b0,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiZDhkYjBlLWUxMTEtNGNiOS1iYTNiLTA5OGY0MTdlMDdiMCIsImlhdCI6MTU3ODMzNTcxOCwiZXhwIjoxNTc4OTQwNTE4fQ.cQzXdflbNjkXZkQ4QLxtGC6y-wis6_sWjSmzhiT5cVk'
+
 6. Api to split money equally between multiple friends
+
 curl --location --request POST 'http://localhost:3000/payment/split' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer dbd8db0e-e111-4cb9-ba3b-098f417e07b0,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiZDhkYjBlLWUxMTEtNGNiOS1iYTNiLTA5OGY0MTdlMDdiMCIsImlhdCI6MTU3ODQwNzE2MCwiZXhwIjoxNTc5MDExOTYwfQ.AU8GdWec9xqCrTBlwWBRRjsNhnvHfhiHnWr5H4TOcx8' \
@@ -72,7 +83,9 @@ curl --location --request POST 'http://localhost:3000/payment/split' \
         }
     ]
 }'
+
 7. Api to split amount by given ratio to multiple friend
+
 curl --location --request POST 'http://localhost:3000/payment/split' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer dbd8db0e-e111-4cb9-ba3b-098f417e07b0,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiZDhkYjBlLWUxMTEtNGNiOS1iYTNiLTA5OGY0MTdlMDdiMCIsImlhdCI6MTU3ODQwNzE2MCwiZXhwIjoxNTc5MDExOTYwfQ.AU8GdWec9xqCrTBlwWBRRjsNhnvHfhiHnWr5H4TOcx8' \
@@ -100,7 +113,9 @@ curl --location --request POST 'http://localhost:3000/payment/split' \
         }
     ]
 }'
+
 8. Api to get payment details by user's Id 
+
 curl --location --request GET 'http://localhost:3000/payment/expense/dbd8db0e-e111-4cb9-ba3b-098f417e07b0' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer dbd8db0e-e111-4cb9-ba3b-098f417e07b0,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiZDhkYjBlLWUxMTEtNGNiOS1iYTNiLTA5OGY0MTdlMDdiMCIsImlhdCI6MTU3ODQwNzE2MCwiZXhwIjoxNTc5MDExOTYwfQ.AU8GdWec9xqCrTBlwWBRRjsNhnvHfhiHnWr5H4TOcx8' \
