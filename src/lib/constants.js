@@ -30,7 +30,8 @@ export const ERROR_TEXTS = {
   ROLE_NOT_FOUND: "Incorrect role id.",
   PASSWORD_FIELD_MISSING: "Please provide valid password",
   RECORD_NOT_FOUND: "No record found.",
-  PROVIDE_VALID_CREDENTIALS: "Please provide either emailId or contact number."
+  PROVIDE_VALID_CREDENTIALS: "Please provide either emailId or contact number.",
+  INCORRECT_PERCENTAGE: "Share percentage cannot go higer than the amount."
 };
 
 export const SUCCESS_TEXT = {
@@ -64,7 +65,12 @@ export const ACCESS_ROLES = {
   GET_USERS: { parentModule: "userManagement", subModule: "View" },
   GET_USER: { parentModule: "userManagement", subModule: "View" },
   PUT_USER: { parentModule: "userManagement", subModule: "Edit" },
-  DELETE_USER: { parentModule: "userManagement", subModule: "Delete" }
+  DELETE_USER: { parentModule: "userManagement", subModule: "Delete" },
+  POST_PAYMENT_SPLIT: { parentModule: "paymentManagement", subModule: "Add" },
+  GET_PAYMENT_EXPENSE: {
+    parentModule: "paymentManagement",
+    subModule: "View"
+  }
 };
 export const PAGINATION_LIMITS = {
   DEFAULT: 10,
@@ -78,4 +84,12 @@ export const EMAIL_SUBJECTS = {
 export const USER_STATUS = {
   VERIFIED: "VERIFIED",
   PENDING_VERIFICATION: "PENDING_VERIFICATION"
+};
+export const PAYMENT_STATUS = {
+  PENDING: 1,
+  PAID: 2,
+  FAILED: 0,
+  PAYMENT_PENDING: "PENDING",
+  PAYMENT_PAID: "PAID",
+  PAYMENT_FAILED: "FAILED"
 };

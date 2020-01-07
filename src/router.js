@@ -29,19 +29,14 @@ import {
   getRoleTypes as userTypes
 } from "./routes/roles";
 
+import { splitExpenses, getUserExpenses } from "./routes/payments";
 export default function createRouter() {
   const router = express.Router();
   // static assets, served from "/public" on the web
   router.use("/public", express.static(path.join(__dirname, "..", "public")));
   router.use(bodyParser.json()); // parse json bodies automatically
   router.use(fileUpload());
-  /**
-   * Uncached routes:
-   * All routes that shouldn't be cached (i.e. non-static assets)
-   * should have these headers to prevent 304 Unmodified cache
-   * returns. This middleware applies it to all subsequently
-   * defined routes.
-   */
+
   router.get("/*", (req, res, next) => {
     res.set({
       "Last-Modified": new Date().toUTCString(),
@@ -127,6 +122,18 @@ export default function createRouter() {
   );
 
   router.get("/userTypes", verifySessionMiddleware, userTypes);
+  router.post(
+    "/payment/split",
+    verifySessionMiddleware,
+    accessPermissionMiddleware,
+    splitExpenses
+  );
+  router.get(
+    "/payment/expense/:emailId",
+    verifySessionMiddleware,
+    accessPermissionMiddleware,
+    getUserExpenses
+  );
 
   // ******************
   // * ERROR HANDLING *

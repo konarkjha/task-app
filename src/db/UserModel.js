@@ -55,15 +55,14 @@ export default class UserModel extends BaseModel {
         {
           name: signupDetails.name,
           verificationCode: verificationCode
-          // RentickleLogo: "path"
+          // GetbaqalaLogo: "path"
         }
       );
       sendMail(signupDetails.email, EMAIL_SUBJECTS.VERIFY_EMAIL, emailBody);
       const message = `Hi ${signupDetails.name},%0AWelcome to Getbaqala. Your OTP is ${verificationCode}. Enter this in the app to verify your account.`;
       sendSms(signupDetails.contactNumber, message);
       return {
-        userId: userId,
-        otp: verificationCode
+        userId: userId
       };
     } catch (error) {
       throw error;
